@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import cross_origin
 
 
 app = Flask(__name__)
@@ -30,12 +31,14 @@ ads_schema = AdSchema(many=True)
 
 
 @app.route('/ads', methods=['GET'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def get_ads():
     all_ads = Ad.query.all()
     return ads_schema.jsonify(all_ads)
 
 
 @app.route('/ads/<int:id>', methods=['GET'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def get_ad(id):
     ad = Ad.query.get(id)
     if ad is None:
@@ -44,6 +47,7 @@ def get_ad(id):
 
 
 @app.route('/ads', methods=['POST'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def create_ad():
     data = request.get_json()
     new_ad = Ad(title=data['title'], description=data['description'])
@@ -53,6 +57,7 @@ def create_ad():
 
 
 @app.route('/ads/<int:id>', methods=['PUT'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def update_ad(id):
     ad = Ad.query.get(id)
     if ad is None:
@@ -65,6 +70,7 @@ def update_ad(id):
 
 
 @app.route('/ads/<int:id>', methods=['DELETE'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def delete_ad(id):
     ad = Ad.query.get(id)
     if ad is None:
